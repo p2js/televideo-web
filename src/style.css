@@ -1,0 +1,24 @@
+#main {
+    width: 644px;
+}
+
+#display {
+    background-color: #000;
+    border: none;
+    width: 644px;
+    height: 400px;
+    margin-bottom: 0;
+}
+
+#controlDeck {
+    margin-top: 0;
+    background-color: #555;
+}
+
+#controlImage {
+    display: none;
+}
+
+:root {
+    background-color: #ccc;
+}
