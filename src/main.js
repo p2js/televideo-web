@@ -48,7 +48,20 @@ const updateContainer = () => {
     displayImage.src = URL(cCurrent, scCurrent, region);
     channelInput.value = cCurrent;
     subChannelInput.value = scCurrent;
-    maxSubChannelSpan.innerText = scCurrentMax;
+}
+
+const determineMaxSubchannel = async () => {
+    let maxSC;
+    for (maxSC = 15; maxSC > 1; maxSC--) {
+        let subChannelExists = await new Promise((resolve) => {
+            subControlImage.onload = () => resolve(true);
+            subControlImage.onerror = () => resolve(false);
+            subControlImage.src = URL(cCurrent, maxSC, region);
+        });
+        if (subChannelExists) break;
+    }
+
+    scCurrentMax = maxSubChannelSpan.innerText = maxSC;
 }
 
 //find next/previous valid channel depending on step
@@ -69,6 +82,7 @@ const surfChannels = async (step) => {
     scCurrent = 1;
 
     updateContainer();
+    determineMaxSubchannel();
 };
 
 //find next/previous valid subchannel depending on step
@@ -83,30 +97,40 @@ const surfSubChannels = async (step) => {
     updateContainer();
 };
 
+//try to fetch the desired channel
 const tryFetchChannel = async (c, sc, r) => {
+    let updated = false;
     //first try the desired channel-subchannel pair, then just the channel without subchannel, then just don't
     if (await exists(c, sc, r)) {
+        updated = true;
         cCurrent = c;
         scCurrent = sc;
         region = r;
-        updateContainer();
     } else if (await exists(c, 1, r)) {
+        updated = true;
         cCurrent = c;
         scCurrent = 1;
         region = r;
     } else if (region != "Nazionale") {
         //if a region is selected, try the generic regional variant
         if (await exists(c, sc, "Regionali")) {
+            updated = true;
             cCurrent = c;
             scCurrent = sc;
             region = "Regionali";
         } else if (await exists(c, 1, "Regionali")) {
+            updated = true;
             cCurrent = c;
             scCurrent = 1;
             region = "Regionali";
         }
     };
-    updateContainer();
+    if (updated) {
+        updateContainer();
+        determineMaxSubchannel();
+    } else {
+        maxSubChannelSpan.innerText = scCurrentMax;
+    }
 }
 
 const resetChannel = () => {
@@ -137,5 +161,8 @@ enterButton.addEventListener("click", () => {
     if (ci == cCurrent && sci == scCurrent) return;
     tryFetchChannel(ci, sci, region);
 });
+channelInput.addEventListener("change", () => {
+    maxSubChannelSpan.innerText = 15;
+})
 
 updateContainer();
