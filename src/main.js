@@ -3,6 +3,7 @@
 //images
 let displayImage = document.getElementById("display");
 let controlImage = document.getElementById("controlImage");
+let subControlImage = document.getElementById("subControlImage");
 //button navigation
 let homeButton = document.getElementById("homeChannel");
 let channelBackButton = document.getElementById("channelBack");
@@ -11,6 +12,11 @@ let channelForwardButton = document.getElementById("channelForward");
 let subchannelForwardButton = document.getElementById("subchannelForward");
 //region selector
 let regionSelector = document.getElementById("regionSelector");
+//text navigation
+let channelInput = document.getElementById("channelInput");
+let subChannelInput = document.getElementById("subchannelInput");
+let maxSubChannelSpan = document.getElementById("maxSubchannel");
+let enterButton = document.getElementById("textInputEnter");
 
 // GLOBAL VARS
 
@@ -40,9 +46,9 @@ const exists = async (c, sc, r) => new Promise((resolve) => {
 //update user interface (this assumes a valid URL)
 const updateContainer = () => {
     displayImage.src = URL(cCurrent, scCurrent, region);
-    //channelInput.value = cCurrent;
-    //subChannelInput.value = scCurrent;
-    //maxSubChannelSpan.value = scCurrentMax;
+    channelInput.value = cCurrent;
+    subChannelInput.value = scCurrent;
+    maxSubChannelSpan.innerText = scCurrentMax;
 }
 
 //find next/previous valid channel depending on step
@@ -50,8 +56,8 @@ const surfChannels = async (step) => {
     region = regionSelector.value;
     let cNext = cCurrent + step;
     while (cNext > 100 && cNext < 899) {
-        console.log("stepping");
         if (!(await exists(cNext, 1, region))) {
+            //if a region is selected, try the generic regional variant
             if ((region != "Nazionale") && await exists(cNext, 1, "Regionali")) {
                 region = "Regionali";
                 break;
@@ -77,6 +83,32 @@ const surfSubChannels = async (step) => {
     updateContainer();
 };
 
+const tryFetchChannel = async (c, sc, r) => {
+    //first try the desired channel-subchannel pair, then just the channel without subchannel, then just don't
+    if (await exists(c, sc, r)) {
+        cCurrent = c;
+        scCurrent = sc;
+        region = r;
+        updateContainer();
+    } else if (await exists(c, 1, r)) {
+        cCurrent = c;
+        scCurrent = 1;
+        region = r;
+    } else if (region != "Nazionale") {
+        //if a region is selected, try the generic regional variant
+        if (await exists(c, sc, "Regionali")) {
+            cCurrent = c;
+            scCurrent = sc;
+            region = "Regionali";
+        } else if (await exists(c, 1, "Regionali")) {
+            cCurrent = c;
+            scCurrent = 1;
+            region = "Regionali";
+        }
+    };
+    updateContainer();
+}
+
 const resetChannel = () => {
     region = regionSelector.value;
     cCurrent = region == "Nazionale" ? 100 : 300;
@@ -87,11 +119,23 @@ const resetChannel = () => {
 
 // NAVIGATION LOGIC
 
+//buttons
 homeButton.addEventListener("click", resetChannel);
 channelForwardButton.addEventListener("click", () => surfChannels(1));
 subchannelForwardButton.addEventListener("click", () => surfSubChannels(1));
 channelBackButton.addEventListener("click", () => surfChannels(-1));
 subchannelBackButton.addEventListener("click", () => surfSubChannels(-1));
 
+//region selector
 regionSelector.addEventListener("change", resetChannel);
+
+//text input
+enterButton.addEventListener("click", () => {
+    region = regionSelector.value;
+    let ci = Number(channelInput.value);
+    let sci = Number(subChannelInput.value);
+    if (ci == cCurrent && sci == scCurrent) return;
+    tryFetchChannel(ci, sci, region);
+});
+
 updateContainer();

@@ -15,12 +15,34 @@
     background-color: #555;
 }
 
-#regionInput,
+
 #buttonNavigation {
-    display: inline;
+    float: left;
 }
 
-#controlImage {
+#regionInput {
+    display: inline-block;
+    transform: translateX(50%);
+}
+
+#textNavigation {
+    float: right;
+}
+
+#channelInput,
+#subchannelInput {
+    appearance: textfield;
+    width: 2em;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#controlImage,
+#subControlImage {
     display: none;
 }
 
