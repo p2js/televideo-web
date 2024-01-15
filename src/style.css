@@ -1,5 +1,11 @@
 #main {
-    width: 644px;
+    min-width: 644px;
+    min-height: 440px;
+    /* Center on screen */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 #display {
@@ -7,12 +13,13 @@
     border: none;
     width: 644px;
     height: 400px;
-    margin-bottom: 0;
+    display: block;
 }
 
 #controlDeck {
-    margin-top: 0;
-    background-color: #555;
+    padding: 10px;
+    background-color: #444;
+    text-align: center;
 }
 
 
@@ -21,18 +28,86 @@
 }
 
 #regionInput {
+    font-family: 'Consolas';
+    font-size: 0.9em;
+    color: #CCC;
     display: inline-block;
-    transform: translateX(50%);
+    transform: translateX(10%);
+}
+
+#regionSelector {
+    background-color: #AAA;
+    border: 1px solid #BBB;
+    border-radius: 2px;
+}
+
+#channelBack,
+#subchannelBack,
+#homeChannel,
+#channelForward,
+#subchannelForward,
+#textInputEnter {
+    margin-right: 2px;
+    margin-left: 2px;
+    background-color: #888;
+    border: 1px solid #AAA;
+    border-radius: 2px;
+    font-family: "Consolas";
+}
+
+#channelBack,
+#subchannelBack,
+#homeChannel,
+#channelForward,
+#subchannelForward {
+    font-size: 0.95em;
+}
+
+#channelBack,
+#channelForward {
+    color: #00FF00;
+    font-weight: bold;
+}
+
+#subchannelBack,
+#subchannelForward {
+    color: #FFFF00;
+    font-weight: bold;
 }
 
 #textNavigation {
     float: right;
+    font-family: "Consolas";
+    color: #EEE;
+    font-size: 0.85em;
 }
 
 #channelInput,
 #subchannelInput {
     appearance: textfield;
+    font-family: "Consolas";
+    color: #EEE;
+    border-width: 0px 0px 1.5px 0px;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+#channelInput {
     width: 2em;
+    border-color: #00FF00;
+}
+
+#subchannelInput {
+    width: 1.5em;
+    border-color: #FFFF00;
+    margin-right: 0.2em;
+}
+
+#maxSubchannel {
+    display: inline-block;
+    width: 1em;
+    margin-right: 10px;
+    margin-left: 2px;
 }
 
 input::-webkit-outer-spin-button,
