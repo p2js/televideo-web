@@ -137,6 +137,7 @@ const resetChannel = () => {
     region = regionSelector.value;
     cCurrent = region == "Nazionale" ? 100 : 300;
     scCurrent = 1;
+    scCurrentMax = 11;
     updateContainer();
 }
 
@@ -166,3 +167,4 @@ channelInput.addEventListener("change", () => {
 })
 
 updateContainer();
+determineMaxSubchannel();
