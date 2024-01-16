@@ -2,9 +2,9 @@
 
 A web client to browse RAI's national teletext service, [Televideo](https://en.wikipedia.org/wiki/Televideo_(teletext)).
 
-You can tr it over on [my website](https://alfiot.net/televideo/).
+You can try it over on [my website](https://alfiot.net/televideo/).
 
-This project gets the resources from RAI's own [online televideo browser](https://www.servizitelevideo.rai.it/televideo/pub/pagina.jsp),
+The app gets the resources from RAI's own [online televideo browser](https://www.servizitelevideo.rai.it/televideo/pub/pagina.jsp),
 but adds some features like skipping empty channels instead of adding random images
 and not reloading on every channel change, as well as providing a better user interface.
 
