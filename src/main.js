@@ -31,16 +31,43 @@ const URL = (c, sc, region) => {
     if (!sc || sc == 1) {
         sc = "";
     } else {
-        sc = `.${sc}`;
+        sc = "." + sc;
     }
-    return `https://www.televideo.rai.it/televideo/pub/tt4web/${region}/16_9_page-${c}${sc}.png`
+
+    return `https://www.televideo.rai.it/televideo/pub/tt4web/${region}/16_9_page-${c}${sc}.png`;
 };
 
+// check local storage for channel information
+// resolve a promise early if valid, otherwise return a "cache and resolve" function
+const checkCache = (url, resolveFunction) => {
+    let now = Date.now();
+
+    // listen to cache only if the channel exists or was checked under 2 months ago
+    let cachedInfo = JSON.parse(localStorage.getItem(url));
+    if (cachedInfo) {
+        let checkedRecently = (now - cachedInfo.lastChecked) < (1000 * 60 * 60 * 24 * 30 * 2);
+        if (cachedInfo.exists || checkedRecently) {
+            resolveFunction(cachedInfo.exists);
+        }
+    }
+
+    return (bool) => {
+        let channelInfo = { exists: bool, lastChecked: now }
+        localStorage.setItem(url, JSON.stringify(channelInfo));
+        resolveFunction(bool);
+    }
+}
+
 //return a boolean if an image exists (to get around CORS)
-const exists = async (c, sc, r) => new Promise((resolve) => {
-    controlImage.onload = () => resolve(true);
-    controlImage.onerror = () => resolve(false);
-    controlImage.src = URL(c, sc, r);
+const exists = async (c, sc, region) => new Promise((resolve) => {
+    let url = URL(c, sc, region);
+
+    let cacheAndResolve = checkCache(url, resolve);
+    if (!cacheAndResolve) return;
+
+    window.controlImage.onload = () => cacheAndResolve(true);
+    window.controlImage.onerror = () => cacheAndResolve(false);
+    window.controlImage.src = url;
 });
 
 //update user interface (this assumes a valid URL)
@@ -52,11 +79,16 @@ const updateContainer = () => {
 
 const determineMaxSubchannel = async () => {
     let maxSC;
-    for (maxSC = 15; maxSC > 1; maxSC--) {
+    for (maxSC = 1; maxSC < 15; maxSC++) {
         let subChannelExists = await new Promise((resolve) => {
-            subControlImage.onload = () => resolve(true);
-            subControlImage.onerror = () => resolve(false);
-            subControlImage.src = URL(cCurrent, maxSC, region);
+            let url = URL(cCurrent, maxSC, region);
+
+            let cacheAndResolve = checkCache(url, resolve);
+            if (!cacheAndResolve) return;
+
+            subControlImage.onload = () => cacheAndResolve(true);
+            subControlImage.onerror = () => cacheAndResolve(false);
+            subControlImage.src = url;
         });
         if (subChannelExists) break;
     }
