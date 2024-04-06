@@ -79,9 +79,9 @@ const updateContainer = () => {
 
 const determineMaxSubchannel = async () => {
     let maxSC;
-    for (maxSC = 1; maxSC < 15; maxSC++) {
+    for (let _sc = 1; _sc < 20; _sc++) {
         let subChannelExists = await new Promise((resolve) => {
-            let url = URL(cCurrent, maxSC, region);
+            let url = URL(cCurrent, _sc, region);
 
             let cacheAndResolve = checkCache(url, resolve);
             if (!cacheAndResolve) return;
@@ -90,10 +90,13 @@ const determineMaxSubchannel = async () => {
             subControlImage.onerror = () => cacheAndResolve(false);
             subControlImage.src = url;
         });
-        if (subChannelExists) break;
+        if (!subChannelExists) {
+            maxSC = maxSubChannelSpan.innerText = _sc - 1;
+            if (_sc > 10) break;
+        }
     }
 
-    scCurrentMax = maxSubChannelSpan.innerText = maxSC;
+    scCurrentMax = maxSC;
 }
 
 //find next/previous valid channel depending on step
