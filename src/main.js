@@ -1,9 +1,5 @@
 // ELEMENT DEFINITIONS
 
-//images
-let displayImage = document.getElementById("display");
-let controlImage = document.getElementById("controlImage");
-let subControlImage = document.getElementById("subControlImage");
 //button navigation
 let homeButton = document.getElementById("homeChannel");
 let channelBackButton = document.getElementById("channelBack");
@@ -65,38 +61,27 @@ const exists = async (c, sc, region) => new Promise((resolve) => {
     let cacheAndResolve = checkCache(url, resolve);
     if (!cacheAndResolve) return;
 
-    window.controlImage.onload = () => cacheAndResolve(true);
-    window.controlImage.onerror = () => cacheAndResolve(false);
-    window.controlImage.src = url;
+    let controlImage = new Image();
+    controlImage.onload = () => cacheAndResolve(true);
+    controlImage.onerror = () => cacheAndResolve(false);
+    controlImage.src = url;
 });
 
 //update user interface (this assumes a valid URL)
 const updateContainer = () => {
-    displayImage.src = URL(cCurrent, scCurrent, region);
+    window.display.src = URL(cCurrent, scCurrent, region);
     channelInput.value = cCurrent;
     subChannelInput.value = scCurrent;
 }
 
 const determineMaxSubchannel = async () => {
-    let maxSC;
-    for (let _sc = 1; _sc < 20; _sc++) {
-        let subChannelExists = await new Promise((resolve) => {
-            let url = URL(cCurrent, _sc, region);
+    // create an array of subchannels, null if they dont exist
+    let subChannelExistsArray = await Promise.all(Array(29).fill().map(async (_, sci) => {
+        return await exists(cCurrent, sci + 1, region) ? sci + 1 : null;
+    }));
 
-            let cacheAndResolve = checkCache(url, resolve);
-            if (!cacheAndResolve) return;
-
-            subControlImage.onload = () => cacheAndResolve(true);
-            subControlImage.onerror = () => cacheAndResolve(false);
-            subControlImage.src = url;
-        });
-        if (!subChannelExists) {
-            maxSC = maxSubChannelSpan.innerText = _sc - 1;
-            if (_sc > 10) break;
-        }
-    }
-
-    scCurrentMax = maxSC;
+    //return the maximum value
+    scCurrentMax = maxSubChannelSpan.innerText = Math.max(...subChannelExistsArray);
 }
 
 //find next/previous valid channel depending on step
