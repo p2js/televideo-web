@@ -1,19 +1,3 @@
-// ELEMENT DEFINITIONS
-
-//button navigation
-let homeButton = document.getElementById("homeChannel");
-let channelBackButton = document.getElementById("channelBack");
-let subchannelBackButton = document.getElementById("subchannelBack");
-let channelForwardButton = document.getElementById("channelForward");
-let subchannelForwardButton = document.getElementById("subchannelForward");
-//region selector
-let regionSelector = document.getElementById("regionSelector");
-//text navigation
-let channelInput = document.getElementById("channelInput");
-let subChannelInput = document.getElementById("subchannelInput");
-let maxSubChannelSpan = document.getElementById("maxSubchannel");
-let enterButton = document.getElementById("textInputEnter");
-
 // GLOBAL VARS
 
 let cCurrent = 100;
@@ -70,23 +54,25 @@ const exists = async (c, sc, region) => new Promise((resolve) => {
 //update user interface (this assumes a valid URL)
 const updateContainer = () => {
     window.display.src = URL(cCurrent, scCurrent, region);
-    channelInput.value = cCurrent;
-    subChannelInput.value = scCurrent;
+    window.channelInput.value = cCurrent;
+    window.subchannelInput.value = scCurrent;
 }
 
 const determineMaxSubchannel = async () => {
+    window.maxSubchannelSpan.innerText = "...";
+
     // create an array of subchannels, null if they dont exist
     let subChannelExistsArray = await Promise.all(Array(29).fill().map(async (_, sci) => {
         return await exists(cCurrent, sci + 1, region) ? sci + 1 : null;
     }));
 
     //return the maximum value
-    scCurrentMax = maxSubChannelSpan.innerText = Math.max(...subChannelExistsArray);
+    scCurrentMax = window.maxSubchannelSpan.innerText = Math.max(...subChannelExistsArray);
 }
 
 //find next/previous valid channel depending on step
 const surfChannels = async (step) => {
-    region = regionSelector.value;
+    region = window.regionSelector.value;
     let cNext = cCurrent + step;
     while (cNext > 100 && cNext < 899) {
         if (!(await exists(cNext, 1, region))) {
@@ -149,12 +135,12 @@ const tryFetchChannel = async (c, sc, r) => {
         updateContainer();
         determineMaxSubchannel();
     } else {
-        maxSubChannelSpan.innerText = scCurrentMax;
+        window.maxSubchannelSpan.innerText = scCurrentMax;
     }
 }
 
 const resetChannel = () => {
-    region = regionSelector.value;
+    region = window.regionSelector.value;
     cCurrent = region == "Nazionale" ? 100 : 300;
     scCurrent = 1;
     scCurrentMax = 11;
@@ -165,25 +151,25 @@ const resetChannel = () => {
 // NAVIGATION LOGIC
 
 //buttons
-homeButton.addEventListener("click", resetChannel);
-channelForwardButton.addEventListener("click", () => surfChannels(1));
-subchannelForwardButton.addEventListener("click", () => surfSubChannels(1));
-channelBackButton.addEventListener("click", () => surfChannels(-1));
-subchannelBackButton.addEventListener("click", () => surfSubChannels(-1));
+window.homeChannelButton.addEventListener("click", resetChannel);
+window.channelForwardButton.addEventListener("click", () => surfChannels(1));
+window.subchannelForwardButton.addEventListener("click", () => surfSubChannels(1));
+window.channelBackButton.addEventListener("click", () => surfChannels(-1));
+window.subchannelBackButton.addEventListener("click", () => surfSubChannels(-1));
 
 //region selector
-regionSelector.addEventListener("change", resetChannel);
+window.regionSelector.addEventListener("change", resetChannel);
 
 //text input
-enterButton.addEventListener("click", () => {
-    region = regionSelector.value;
-    let ci = Number(channelInput.value);
-    let sci = Number(subChannelInput.value);
+window.textInputEnter.addEventListener("click", () => {
+    region = window.regionSelector.value;
+    let ci = Number(window.channelInput.value);
+    let sci = Number(window.subchannelInput.value);
     if (ci == cCurrent && sci == scCurrent) return;
     tryFetchChannel(ci, sci, region);
 });
-channelInput.addEventListener("change", () => {
-    maxSubChannelSpan.innerText = 15;
+window.channelInput.addEventListener("change", () => {
+    window.maxSubchannelSpan.innerText = 15;
 })
 
 updateContainer();

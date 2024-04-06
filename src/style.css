@@ -41,11 +41,11 @@
     border-radius: 2px;
 }
 
-#channelBack,
-#subchannelBack,
-#homeChannel,
-#channelForward,
-#subchannelForward,
+#channelBackButton,
+#subchannelBackButton,
+#homeChannelButton,
+#channelForwardButton,
+#subchannelForwardButton,
 #textInputEnter {
     margin-right: 2px;
     margin-left: 2px;
@@ -55,22 +55,22 @@
     font-family: "Consolas";
 }
 
-#channelBack,
-#subchannelBack,
-#homeChannel,
-#channelForward,
-#subchannelForward {
+#channelBackButton,
+#subchannelBackButton,
+#homeChannelButton,
+#channelForwardButton,
+#subchannelForwardButton {
     font-size: 0.95em;
 }
 
-#channelBack,
-#channelForward {
+#channelBackButton,
+#channelForwardButton {
     color: #00FF00;
     font-weight: bold;
 }
 
-#subchannelBack,
-#subchannelForward {
+#subchannelBackButton,
+#subchannelForwardButton {
     color: #FFFF00;
     font-weight: bold;
 }
@@ -103,7 +103,7 @@
     margin-right: 0.2em;
 }
 
-#maxSubchannel {
+#maxSubchannelSpan {
     display: inline-block;
     width: 1em;
     margin-right: 10px;
