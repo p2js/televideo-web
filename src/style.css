@@ -1,11 +1,19 @@
+body {
+    background-color: #ccc;
+    text-align: center;
+}
+
+#logo {
+    margin: 1em;
+}
+
 #main {
     min-width: 644px;
-    min-height: 440px;
-    /* Center on screen */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1.1);
+    min-height: 470px;
+    max-width: fit-content;
+    max-height: fit-content;
+    margin-inline: auto;
+    margin-top: 2em;
 }
 
 #display {
@@ -17,110 +25,78 @@
 }
 
 #controlDeck {
-    padding: 10px;
-    background-color: #444;
+    margin-top: 2rem;
+    background-color: #5E5E5E;
+    padding: 0.75em;
     text-align: center;
+    border-radius: 0.5rem;
 }
-
 
 #buttonNavigation {
     float: left;
 }
 
 #regionInput {
-    font-family: 'Consolas';
-    font-size: 0.9em;
-    color: #CCC;
     display: inline-block;
-    transform: translateX(10%);
-}
-
-#regionSelector {
-    background-color: #AAA;
-    border: 1px solid #BBB;
-    border-radius: 2px;
-}
-
-#channelBackButton,
-#subchannelBackButton,
-#homeChannelButton,
-#channelForwardButton,
-#subchannelForwardButton,
-#textInputEnter {
-    margin-right: 2px;
-    margin-left: 2px;
-    background-color: #888;
-    border: 1px solid #AAA;
-    border-radius: 2px;
-    font-family: "Consolas";
-}
-
-#channelBackButton,
-#subchannelBackButton,
-#homeChannelButton,
-#channelForwardButton,
-#subchannelForwardButton {
-    font-size: 0.95em;
-}
-
-#channelBackButton,
-#channelForwardButton {
-    color: #00FF00;
-    font-weight: bold;
-}
-
-#subchannelBackButton,
-#subchannelForwardButton {
-    color: #FFFF00;
-    font-weight: bold;
 }
 
 #textNavigation {
     float: right;
-    font-family: "Consolas";
-    color: #EEE;
-    font-size: 0.85em;
 }
 
-#channelInput,
-#subchannelInput {
-    appearance: textfield;
-    font-family: "Consolas";
-    color: #EEE;
-    border-width: 0px 0px 1.5px 0px;
-    border-radius: 0;
+#buttonNavigation>button,
+#textInputEnter {
+    font-family: 'Consolas';
+    font-size: 1em;
+    padding-inline: 0.4em;
+    border: none;
+    margin-inline: 2px;
+    border-radius: 0.25em;
+    background-color: #ccc;
+}
+
+#regionSelector {
+    font-family: sans-serif;
+    font-size: 0.95em;
+    border: none;
+    padding: 0.1em 0.5em;
+    border-radius: 0.25em;
+    background-color: #ccc;
+}
+
+#textNavigation {
+    font-family: 'Consolas';
+    color: #eee;
+    font-size: 1em;
+}
+
+#textNavigation>input {
+    font-family: 'Consolas';
+    font-size: 1em;
+    text-align: center;
+    color: #eee;
     background-color: transparent;
+    appearance: textfield;
+    border-width: 0px;
+    outline: none;
+    margin-inline: 0.1em;
+    padding: 0;
+    transition: border-bottom 0.05s;
+}
+
+#textNavigation>input:hover,
+#textNavigation>input:focus {
+    border-bottom: 1.5px solid #ccc;
 }
 
 #channelInput {
-    width: 2em;
-    border-color: #00FF00;
+    width: 1.67em;
 }
 
 #subchannelInput {
-    width: 1.3em;
-    border-color: #FFFF00;
-    margin-right: 0.2em;
+    width: 1.2em;
 }
 
 #maxSubchannelSpan {
-    display: inline-block;
-    width: 1em;
-    margin-right: 10px;
-    margin-left: 2px;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-#controlImage,
-#subControlImage {
-    display: none;
-}
-
-:root {
-    background-color: #ccc;
+    margin-inline: 0.25em;
 }

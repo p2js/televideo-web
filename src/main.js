@@ -2,7 +2,7 @@
 
 let cCurrent = 100;
 let scCurrent = 1;
-let scCurrentMax = 11;
+let scCurrentMax = 10;
 let region = "Nazionale";
 
 // HELPER FUNCTIONS
@@ -58,6 +58,7 @@ const updateContainer = () => {
     window.subchannelInput.value = scCurrent;
 }
 
+//determine the highest subchanel in the current channel
 const determineMaxSubchannel = async () => {
     window.maxSubchannelSpan.innerText = "...";
 
@@ -73,8 +74,12 @@ const determineMaxSubchannel = async () => {
 //find next/previous valid channel depending on step
 const surfChannels = async (step) => {
     region = window.regionSelector.value;
+    window.channelInput.value = "";
     let cNext = cCurrent + step;
-    while (cNext > 100 && cNext < 899) {
+
+    if (cNext < 100 || cNext > 899) {
+        return;
+    } else while (cNext > 100 && cNext < 899) {
         if (!(await exists(cNext, 1, region))) {
             //if a region is selected, try the generic regional variant
             if ((region != "Nazionale") && await exists(cNext, 1, "Regionali")) {
@@ -84,6 +89,7 @@ const surfChannels = async (step) => {
             cNext += step;
         } else break;
     }
+
     cCurrent = cNext;
     scCurrent = 1;
 
@@ -94,7 +100,10 @@ const surfChannels = async (step) => {
 //find next/previous valid subchannel depending on step
 const surfSubChannels = async (step) => {
     let scNext = scCurrent + step;
-    while (!(await exists(cCurrent, scNext, region))) {
+
+    if (scNext < 1) {
+        return;
+    } else while (!(await exists(cCurrent, scNext, region))) {
         if (scNext < 1 || scNext > scCurrentMax) return;
         scNext += step;
     }
@@ -151,17 +160,17 @@ const resetChannel = () => {
 // NAVIGATION LOGIC
 
 //buttons
-window.homeChannelButton.addEventListener("click", resetChannel);
-window.channelForwardButton.addEventListener("click", () => surfChannels(1));
-window.subchannelForwardButton.addEventListener("click", () => surfSubChannels(1));
-window.channelBackButton.addEventListener("click", () => surfChannels(-1));
-window.subchannelBackButton.addEventListener("click", () => surfSubChannels(-1));
+window.homeChannelButton.addEventListener("mousedown", resetChannel);
+window.channelForwardButton.addEventListener("mousedown", () => surfChannels(1));
+window.subchannelForwardButton.addEventListener("mousedown", () => surfSubChannels(1));
+window.channelBackButton.addEventListener("mousedown", () => surfChannels(-1));
+window.subchannelBackButton.addEventListener("mousedown", () => surfSubChannels(-1));
 
 //region selector
 window.regionSelector.addEventListener("change", resetChannel);
 
 //text input
-window.textInputEnter.addEventListener("click", () => {
+window.textInputEnter.addEventListener("mousedown", () => {
     region = window.regionSelector.value;
     let ci = Number(window.channelInput.value);
     let sci = Number(window.subchannelInput.value);
@@ -169,7 +178,7 @@ window.textInputEnter.addEventListener("click", () => {
     tryFetchChannel(ci, sci, region);
 });
 window.channelInput.addEventListener("change", () => {
-    window.maxSubchannelSpan.innerText = 15;
+    window.maxSubchannelSpan.innerText = 1;
 })
 
 updateContainer();
