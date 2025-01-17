@@ -105,4 +105,6 @@ input::-webkit-inner-spin-button {
 
 #maxSubchannelSpan {
     margin-inline: 0.25em;
+    display: inline-block;
+    min-width: 1.2em;
 }

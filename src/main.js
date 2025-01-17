@@ -60,7 +60,7 @@ const updateContainer = () => {
 
 //determine the highest subchanel in the current channel
 const determineMaxSubchannel = async () => {
-    window.maxSubchannelSpan.innerText = "...";
+    window.maxSubchannelSpan.innerText = "..";
 
     // create an array of subchannels, null if they dont exist
     let subChannelExistsArray = await Promise.all(Array(29).fill().map(async (_, sci) => {
